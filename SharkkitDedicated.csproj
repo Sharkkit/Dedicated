@@ -33,7 +33,7 @@
     </PropertyGroup>
     <PropertyGroup>
         <!-- Try to allow for Github Actions to build this by referencing the Dependencies Repo checkout --> 
-        <ReferencePath>.\Dependencies\Game;.\Dependencies\UnityEngine$(ReferencePath)</ReferencePath>
+        <ReferencePath>.\Dependencies\Game;.\Dependencies\UnityEngine;.\Dependencies\ValveSockets;$(ReferencePath)</ReferencePath>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
