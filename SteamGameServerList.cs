@@ -1,4 +1,5 @@
-﻿using Steamworks;
+﻿using System;
+using Steamworks;
 using UnityEngine;
 
 namespace SharkkitDedicated
@@ -56,6 +57,9 @@ namespace SharkkitDedicated
 
         public bool RegisterServer(ushort gamePort = 1337, ushort queryPort = 1336, string gsUserToken = null)
         {
+            const int appId = 648800;
+            Environment.SetEnvironmentVariable("SteamAppId", appId.ToString());
+            Environment.SetEnvironmentVariable("SteamGameId", appId.ToString());
             if (!GameServer.Init(0 /* ANY */, 8765 /* outgoing port */, gamePort, queryPort,
                 EServerMode.eServerModeAuthenticationAndSecure, "1.0.0.0"))
             {
