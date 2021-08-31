@@ -31,6 +31,10 @@
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
+    <PropertyGroup>
+        <!-- Try to allow for Github Actions to build this by referencing the Dependencies Repo checkout --> 
+        <ReferencePath>Dependencies\;$(ReferencePath)</ReferencePath>
+    </PropertyGroup>
     <ItemGroup>
         <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\Papier\bin\Debug\net5.0\work\BuildData\Assembly-CSharp.dll</HintPath>
