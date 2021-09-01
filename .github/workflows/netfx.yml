@@ -32,8 +32,8 @@ jobs:
     - name: Build project
       run: msbuild SharkkitDedicated.csproj /p:Configuration=Release
  
-    # - name: Upload Artifact
-    #  uses: actions/upload-artifact@v1.0.0
-    #  with:
-    #    name: published_webapp
-    #    path: bin\Release\Publish
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: SharkkitDedicated Build
+        path: bin\Release\SharkkitAPI.*
