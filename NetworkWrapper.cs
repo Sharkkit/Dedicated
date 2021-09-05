@@ -52,17 +52,18 @@ namespace SharkkitDedicated
             {
                 dataType = ConfigurationDataType.FunctionPtr,
                 value = ConfigurationValue.ConnectionStatusChanged,
-                data = new Configuration.ConfigurationData()
+                data = new Configuration.ConfigurationData
+                {
+                    FunctionPtr = Marshal.GetFunctionPointerForDelegate(_channel.ServerStatusCallback)
+                }
             };
-            
-            confCbStatusChanged.data.FunctionPtr = Marshal.GetFunctionPointerForDelegate(_channel.ServerStatusCallback);
-        
+
             var addr = new Address();
-            addr.SetAddress("0.0.0.0", (ushort)(1337));
+            addr.SetAddress("0.0.0.0", 1337);
             
             _channel.ServerSocket = _networkingSockets.CreateListenSocket(ref addr, new []{ confCbStatusChanged });
 
-                // TODO: HostGame() hooking.
+            // TODO: HostGame() hooking, no default auto-hosting!
             Debug.Log($"Trying to register with Steam Master-Server: {_serverList.RegisterServer()}");
             Debug.Log($"ServerId: "+ SteamGameServerList.ServerId);
         }
@@ -345,15 +346,18 @@ namespace SharkkitDedicated
     /// </summary>
     public class NetworkChannel
     {
+        // TODO: abstract away client vs server (client needs no dedicated connections dict etc).
         public readonly Dictionary<CSteamID, uint> DedicatedConnections = new Dictionary<CSteamID, uint>();
-        public uint ServerSocket;
+        public uint ServerSocket; // Clients connected to US (the server)
         public uint ClientSocket; // Connection TO the server.
-        public bool ClientConnected;
+        public bool ClientConnected; // If we are the client and are connected (TODO: Dedup with ClientConnection Prop)
         public uint PollGroup;
         public readonly Dictionary<CSteamID, Queue<NetworkingMessage>[]> PacketBufs =
             new Dictionary<CSteamID, Queue<NetworkingMessage>[]>();
 
         public StatusCallback ServerStatusCallback;
         public StatusCallback ClientStatusCallback;
+
+        public bool ClientConnection => ServerSocket == 0 && ClientSocket != 0;
     }
 }
