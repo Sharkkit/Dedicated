@@ -294,29 +294,12 @@ namespace SharkkitDedicated
             return ticket;
         }
 
-        private static SendFlags ConvertFlags(EP2PSend flags)
-        {
-            switch (flags)
-            {
-                case EP2PSend.k_EP2PSendReliable: 
-                    return SendFlags.Reliable;
-                case EP2PSend.k_EP2PSendUnreliable:
-                    return SendFlags.Unreliable;
-                case EP2PSend.k_EP2PSendUnreliableNoDelay:
-                    return SendFlags.NoDelay;
-                case EP2PSend.k_EP2PSendReliableWithBuffering: // TODO: Validate
-                    return SendFlags.NoNagle;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(flags), flags, null);
-            }
-        }
-
         public static bool SendP2PPacket(CSteamID steamIDRemote, byte[] pubData, uint cubData, EP2PSend eP2PSendType,
             int nChannel = 0)
         {
             if (_channel.DedicatedConnections.TryGetValue(steamIDRemote, out var con))
             {
-                var flags = ConvertFlags(eP2PSendType);
+                var flags = NetworkUtils.ConvertFlags(eP2PSendType);
                 Debug.LogWarning($"Trying to send {cubData} Bytes to {steamIDRemote} on con {con}. Flags {eP2PSendType}, {flags}");
                 Debug.Assert(pubData.Length == cubData);
                 // TODO: Use marshalling, because that otherwise happens internally anyway and we otherwise copy a lot of garbage.
