@@ -78,58 +78,10 @@ namespace SharkkitDedicated
             Library.Deinitialize();
         }
 
+        [Obsolete("Use the explicit ConnectToIP method")]
         public static void ConnectToLocalHost(CSteamID hostId)
         {
-            _channel = new NetworkChannel();
-            var addr = new Address();
-            addr.SetAddress("127.0.0.1", (ushort)(1337));
-
-            var confCbStatusChanged = new Configuration
-            {
-                dataType = ConfigurationDataType.FunctionPtr,
-                value = ConfigurationValue.ConnectionStatusChanged,
-                data = new Configuration.ConfigurationData()
-            };
-
-            _channel.ClientStatusCallback = (ref StatusInfo info) =>
-            {
-                switch (info.connectionInfo.state)
-                {
-                    case ConnectionState.Connected:
-                        _channel.ClientConnected = true;
-                        break;
-                    case ConnectionState.Connecting:
-                        break;
-                    default:
-                        _channel.ClientConnected = true; // Error, don't hang up forever.
-                        break;
-                }
-            };
-
-            confCbStatusChanged.data.FunctionPtr = Marshal.GetFunctionPointerForDelegate(_channel.ClientStatusCallback);
-            _channel.ClientSocket = _networkingSockets.Connect(ref addr, new[] { confCbStatusChanged });
-
-            // Unexpected blocking that can freeze the client, but I don't know what happens if Send() is called before being connected.
-            // Raft itself immediately sends a message after the call to Connect.
-            while (!_channel.ClientConnected)
-            {
-                Thread.Sleep(20);
-                _networkingSockets.RunCallbacks();
-            }
-
-            var status = new ConnectionStatus();
-            if (_networkingSockets.GetQuickConnectionStatus(_channel.ClientSocket, ref status))
-            {
-                if (status.state != ConnectionState.Connected)
-                {
-                    Debug.LogError("Error when trying to connect");
-                    _channel.ClientConnected = false;
-                    _channel.ClientSocket = 0;
-                    return;
-                }
-            }
-
-            _channel.DedicatedConnections.Add(hostId, _channel.ClientSocket);
+            ConnectToIP(hostId, "127.0.0.1", 1337);
         }
         
         public static void ConnectToIP(CSteamID fakeHostId, string ipAddress, ushort port)
