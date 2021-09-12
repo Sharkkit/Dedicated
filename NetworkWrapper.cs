@@ -44,7 +44,7 @@ namespace SharkkitDedicated
             Library.Deinitialize();
         }
 
-        public static bool ListenOn(ushort port, bool addToSteamServerBrowser = true, string ip = "0.0.0.0")
+        public static bool ListenOn(ListenArguments listenArguments)
         {
             var channel = new ServerNetworkChannel
             {
@@ -93,14 +93,15 @@ namespace SharkkitDedicated
                 }
             };
 
-            var addr = AddressFromIPAndPort(ip, port);
+            var addr = AddressFromIPAndPort(listenArguments.ListenIp, listenArguments.Port);
             channel.ServerSocket = _networkingSockets.CreateListenSocket(ref addr, new[] { confCbStatusChanged });
             
-            if (addToSteamServerBrowser)
+            if (listenArguments.AdvertiseInSteamBrowser)
             {
                 // TODO: More RegisterServer API
-                Debug.Log($"Trying to register with Steam Master-Server: {_serverList.RegisterServer(port)}");
-                Debug.Log($"Steam Server Id: {SteamGameServerList.ServerId}");
+                var success = _serverList.RegisterServer(listenArguments.Port, listenArguments.QueryPort,
+                    listenArguments.GsUserToken);
+                Debug.Log($"Trying to register with Steam Master-Server: {success}");
             }
 
             _channel = channel;

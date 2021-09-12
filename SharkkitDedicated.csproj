@@ -60,6 +60,7 @@
         <Compile Include="ClientConnectionState.cs" />
         <Compile Include="ClientNetworkChannel.cs" />
         <Compile Include="CommandLine.cs" />
+        <Compile Include="ListenArguments.cs" />
         <Compile Include="NetworkChannel.cs" />
         <Compile Include="NetworkUtils.cs" />
         <Compile Include="NetworkWrapper.cs" />
