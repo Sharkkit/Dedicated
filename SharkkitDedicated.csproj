@@ -57,10 +57,14 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="ClientConnectionState.cs" />
+        <Compile Include="ClientNetworkChannel.cs" />
         <Compile Include="CommandLine.cs" />
+        <Compile Include="NetworkChannel.cs" />
         <Compile Include="NetworkUtils.cs" />
         <Compile Include="NetworkWrapper.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="ServerNetworkChannel.cs" />
         <Compile Include="SteamGameServerList.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

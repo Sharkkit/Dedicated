@@ -25,9 +25,8 @@ namespace SharkkitDedicated
 
             _connectedCallback = Callback<SteamServersConnected_t>.CreateGameServer(t =>
             {
-                Debug.Log("Successfully connected to Steam");
+                Debug.Log($"Successfully connected to Steam as {ServerId}");
                 ConnectedToSteam = true;
-                Debug.Log(ServerId);
 
                 UpdateGameInformation();
             });
@@ -96,8 +95,17 @@ namespace SharkkitDedicated
         public void Tick()
         {
             // TODO: Register callbacks for auth....
+            if (_connectedCallback == null)
+            {
+                return; // Never initialized
+            }
+            
             GameServer.RunCallbacks();
-            UpdateGameInformation();
+
+            if (ConnectedToSteam)
+            {
+                UpdateGameInformation();
+            }
         }
 
         public void UpdateGameInformation()
@@ -113,6 +121,11 @@ namespace SharkkitDedicated
 
         public void Shutdown()
         {
+            if (_connectedCallback == null)
+            {
+                return; // Never initialized
+            }
+            
             SteamGameServer.LogOff();
             GameServer.Shutdown();
         }
