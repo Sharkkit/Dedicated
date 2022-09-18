@@ -3,7 +3,7 @@ on: [push]
  
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2019 # We need .net fx 4.0, which is gone with VS 2022 (windows-latest)
  
     steps:
     - name: Checkout
